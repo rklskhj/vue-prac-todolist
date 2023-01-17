@@ -1,8 +1,8 @@
 <template>
-  <ul class="list">
+  <ul class="list" v-bind:class="listempty">
     <li
       class="list__item"
-      v-for="(todoItem, index) in propsdata"
+      v-for="(todoItem, index) in propItems"
       :key="todoItem"
     >
       <div class="list__box">
@@ -13,7 +13,12 @@
           v-on:change="toggleComplete(todoItem)"
         />
         <label :for="todoItem.item" class="list__label">
-          <p class="list__text">{{ todoItem.item }}</p>
+          <p v-if="todoItem.completed === true" class="list__text-done">
+            {{ todoItem.item }}
+          </p>
+          <p v-else-if="todoItem.completed === false" class="list__text">
+            {{ todoItem.item }}
+          </p>
         </label>
       </div>
       <div class="delete__box">
@@ -27,7 +32,12 @@
 </template>
 <script>
 export default {
-  props: ["propsdata"],
+  props: ["propItems", "propEmpty"],
+  computed: {
+    listempty() {
+      return this.propEmpty ? "list--empty" : null;
+    },
+  },
   methods: {
     toggleComplete(todoItem) {
       this.$emit("toggleItem", todoItem);
@@ -75,6 +85,9 @@ export default {
 }
 .list__date {
   font-weight: bold;
+}
+.list__text-done {
+  text-decoration: line-through;
 }
 input[type="checkbox"] {
   position: relative;
